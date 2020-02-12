@@ -1,11 +1,10 @@
 package org.launchcode.codingevents.controllers;
 
+import org.launchcode.codingevents.data.EventData;
+import org.launchcode.codingevents.models.Event;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,13 +18,13 @@ import java.util.Map;
 @RequestMapping("events")
 public class EventController {
 
-        Map<String, String> events = new HashMap<String, String>();
+
 
     @GetMapping
     public String displayAllEvents(Model model) {
 
-
-        model.addAttribute("events", events);
+        model.addAttribute("title", "All Events");
+        model.addAttribute("events", EventData.getAll());
         return "events/index";
     }
     //lives at /events/create
@@ -36,13 +35,22 @@ public class EventController {
     }
 
     @PostMapping("create")
-    public String processCreateEventForm(@RequestParam String eventName, String description) {
-
-        events.put(eventName, description);
-        events.put("Become a Master Java Programmer", "Learn all aspects needed to launch into Java headfirst");
-        events.put("LaunchCode", "Become career ready in just 10 months");
-        events.put("JavaScript for Lyfe", "Learn how to make your websites interactive");
+    public String processCreateEventForm(@ModelAttribute Event newEvent) {
+        EventData.add(newEvent);
+//        events.put(eventName, description);
+//        events.put("Become a Master Java Programmer", "Learn all aspects needed to launch into Java headfirst");
+//        events.put("LaunchCode", "Become career ready in just 10 months");
+//        events.put("JavaScript for Lyfe", "Learn how to make your websites interactive");
         return "redirect:";
     }
+
+    @GetMapping("delete")
+    public String dislpayDeleteEventForm(Model model){
+        model.addAttribute("title", "Delete Events");
+        model.addAttribute("events", EventData.getAll());
+        return "events/delete";
+    }
+
+
 
 }
